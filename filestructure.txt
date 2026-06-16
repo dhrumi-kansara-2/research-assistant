@@ -1,0 +1,18 @@
+research-assistant/
+├── backend/
+│   ├── graph.py        ← StateGraph definition, node wiring, edge logic
+│   ├── nodes.py        ← all 5 agent functions (Planner → Report)
+│   ├── tools.py        ← DuckDuckGo search wrapper
+│   ├── main.py         ← FastAPI app, /research streaming endpoint
+│   └── prompts.py      ← system prompt strings for each node
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx           ← root component, EventSource reader
+│   │   └── components/
+│   │       ├── AgentStep.jsx  ← shows each node's progress live
+│   │       └── ReportViewer.jsx ← renders final markdown report
+│   ├── index.html
+│   └── package.json
+├── .env.example        ← GROQ_API_KEY, LANGCHAIN_API_KEY, etc.
+├── requirements.txt    ← all Python deps
+└── README.md
