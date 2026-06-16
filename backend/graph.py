@@ -1,5 +1,11 @@
 import operator
 from typing import Annotated, TypedDict 
+from langgraph.graph import StateGraph, END
+from langchain_groq import ChatGroq
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 class ResearchState(TypedDict):
     query: str #original user question
@@ -8,3 +14,11 @@ class ResearchState(TypedDict):
     draft: str
     critique: str
     final_report: str
+
+llm = ChatGroq(
+    model="llama-3.3-70b-versatile",
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.3
+)
+
+graph_builder=StateGraph(ResearchState)
