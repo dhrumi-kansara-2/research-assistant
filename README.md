@@ -28,27 +28,16 @@ A mutli-agent research assitant built with LangGraph, Groq(Llama 3), DuckDuckGo 
 research-assistant/
 
 ├── backend/
-
 │   ├── graph.py       # StateGraph, node wiring, edge logic
-
 │   ├── nodes.py       # all 5 agent node functions
-
 │   ├── tools.py       # DuckDuckGo search wrapper
-
 │   ├── main.py        # FastAPI /research streaming endpoint
-
 │   └── prompts.py     # system prompts for each agent
-
 ├── frontend/
-
 │   └── src/
-
 │       ├── App.jsx
-
 │       └── components/
-
 ├── .env.example
-
 └── requirements.txt
 ```
 
