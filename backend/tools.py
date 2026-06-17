@@ -1,4 +1,4 @@
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 def search_duckduckgo(query: str, max_results: int=5)->list[str]:
     results=[]
