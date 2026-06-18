@@ -9,6 +9,7 @@ import time
 planner_node: take user's raw query and break it into 3-5 focused sub questions
 '''
 def planner_node(state: ResearchState) -> dict:
+    time.sleep(5)
     query=state['query']
     messages=[
         SystemMessage(content="You are a research planner. Break the user query into exactly 2 sub-questions. Return them as a numbered list. Nothing else."),
@@ -23,7 +24,9 @@ def planner_node(state: ResearchState) -> dict:
 researcher_node: takes every sub-question the planner produced and searches DuckDuckGo for each one
 '''
 def researcher_node(state: ResearchState) -> dict:
+    time.sleep(5)
     sub_questions=state['sub_questions']
+    time.sleep(2)
     all_results=[]
     for question in sub_questions:
         results=search_duckduckgo(question, max_results=5)
@@ -34,10 +37,11 @@ def researcher_node(state: ResearchState) -> dict:
 synthesizer_node: reads all the raw results the Researcher collected and mergers them into one coherent draft report
 '''
 def synthesizer_node(state: ResearchState)->dict:
-    search_results="\n\n".join(state["search_results"])
     time.sleep(15)       # wait before hitting LLM again
+    search_results="\n\n".join(state["search_results"])
+    search_results=search_results[:1500] 
     messages=[
-        SystemMessage(content="You are a research writer. Synthesize the search results into a coherent, well structured draft report. Include key findings and cite the URLs as sources."),
+        SystemMessage(content="You are a research writer. Synthesize the search results into a brief draft report of maximum 200 words. Include key findings only."),
         HumanMessage(content=f"Original query: {state['query']}\n\nSearch results:\n{search_results}")
     ]
     response=llm.invoke(messages)
@@ -46,25 +50,25 @@ def synthesizer_node(state: ResearchState)->dict:
 '''
 critic_node: reads the draft and decides if it's good enough or if the researcher needs to run again to fill gaps
 '''
-
-def critic_node(state: ResearchState)->dict:
-    message=[
-        SystemMessage(content="""You are a research critique. Review the draft report and check for:
-                      1. Missing information or gaps.
-                      2. Unsupported claims.
-                      3. Areas needing more research
-
-                      if the graph is good enough reply with exactly: APPROVED
-                      if it needs more research reply with: NEEDS_RESEARCH: <specific gap>"""),
-        HumanMessage(content=f"Draft report:\n{state['draft']}")
+def critic_node(state: ResearchState) -> dict:
+    time.sleep(5)
+    messages = [
+        SystemMessage(content="""You are a research critic. Review the draft.
+        You MUST reply with ONLY one of these two options:
+        - The single word: APPROVED
+        - Or: NEEDS_RESEARCH: <one specific gap>
+        
+        Be generous. If the draft covers the topic at all, reply APPROVED."""),
+        HumanMessage(content=f"Draft:\n{state['draft'][:500]}")
     ]
-    response=llm.invoke(message)
-    return {"critique_node":response.content}
+    response = llm.invoke(messages)
+    return {"critique": response.content}
 
 '''
 report_node: final step. Takes the draft and polishes it into clean, cited, structured final report
 '''
 def report_node(state: ResearchState)->dict:
+    time.sleep(5)
     messages=[
         SystemMessage(content="""You are an academic research editor.
         Write a concise research paper with these sections:

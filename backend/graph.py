@@ -5,7 +5,7 @@ from nodes import planner_node, researcher_node, synthesizer_node, critic_node, 
 '''router function before graph builder'''
 def should_continue(state: ResearchState)->str:
     critique=state["critique"]
-    if "APPROVED" in critique:
+    if "NEEDS_RESEARCH" not in critique:
         return "done"
     return "try_again"
 

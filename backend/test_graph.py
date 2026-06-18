@@ -9,7 +9,8 @@ result=graph.invoke({
     "draft": "",
     "critique": "",
     "final_report":""
-})
+},    config={"recursion_limit": 10}  # max 10 node executions
+)
 
 print("sub questions")
 

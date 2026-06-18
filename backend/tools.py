@@ -4,6 +4,6 @@ def search_duckduckgo(query: str, max_results: int=2)->list[str]:
     results=[]
     with DDGS() as ddgs:
         for r in ddgs.text(query,max_results=max_results):
-            snippet = f"Title: {r['title']}\nURL: {r['href']}\nSummary: {r['body']}"
+            snippet = f"Title: {r['title']}\nURL: {r['href']}\nSummary: {r['body'][:100]}"
             results.append(snippet)
     return results
