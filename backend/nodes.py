@@ -21,7 +21,6 @@ def planner_node(state: ResearchState) -> dict:
 '''
 researcher_node: takes every sub-question the planner produced and searches DuckDuckGo for each one
 '''
-
 def researcher_node(state: ResearchState) -> dict:
     sub_questions=state['sub_questions']
     all_results=[]
@@ -29,3 +28,60 @@ def researcher_node(state: ResearchState) -> dict:
         results=search_duckduckgo(question, max_results=5)
         all_results.extend(results)
     return {"search_results":all_results}
+
+'''
+synthesizer_node: reads all the raw results the Researcher collected and mergers them into one coherent draft report
+'''
+def synthesizer_node(state: ResearchState)->dict:
+    search_results="\n\n".join(state["search_results"])
+    messages=[
+        SystemMessage(content="You are a research writer. Synthesize the search results into a coherent, well structured draft report. Include key findings and cite the URLs as sources."),
+        HumanMessage(content=f"Original query: {state['query']}\n\nSearch results:\n{search_results}")
+    ]
+    response=llm.invoke(messages)
+    return {"draft": response.content}
+
+'''
+critic_node: reads the draft and decides if it's good enough or if the researcher needs to run again to fill gaps
+'''
+
+def critic_node(state: ResearchState)->dict:
+    message=[
+        SystemMessage(content="""You are a research critique. Review the draft report and check for:
+                      1. Missing information or gaps.
+                      2. Unsupported claims.
+                      3. Areas needing more research
+
+                      if the graph is good enough reply with exactly: APPROVED
+                      if it needs more research reply with: NEEDS_RESEARCH: <specific gap>"""),
+        HumanMessage(content=f"Draft report:\n{state['draft']}")
+    ]
+    response=llm.invoke(message)
+    return {"critique_node":response.content}
+
+'''
+report_node: final step. Takes the draft and polishes it into clean, cited, structured final report
+'''
+def report_node(state: ResearchState)->dict:
+    messages=[
+        SystemMessage(content="""You are an academic research editor.
+        Write a formal research paper with these exact sections:
+        
+        # Title
+        ## Abstract
+        ## 1. Introduction
+        ## 2. Literature Review
+        ## 3. Key Findings
+        ## 4. Analysis & Discussion
+        ## 5. Conclusion
+        ## References
+        
+        Use formal academic language. Cite URLs from search results
+        as numbered references [1], [2] etc. Be thorough and detailed."""),
+        HumanMessage(content=f"""Query: {state['query']}
+        Draft: {state['draft']}
+        Crituqe: {state['critique']} 
+        """)
+    ]
+    response=llm.invoke(messages)
+    return {"final_report":response.content}

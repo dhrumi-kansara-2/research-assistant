@@ -17,5 +17,7 @@ for q in result["sub_questions"]:
     print("-",q)
 
 print("\nSearch results count:", len(result["search_results"]))
-print("\nFirst result preview:")
-print(result["search_results"][0][:300])
+print("\nCritique:")
+print(result["critique"])
+print("\nFinal report preview:")
+print(result["final_report"][:500])
