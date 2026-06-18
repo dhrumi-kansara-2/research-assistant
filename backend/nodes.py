@@ -65,19 +65,16 @@ report_node: final step. Takes the draft and polishes it into clean, cited, stru
 def report_node(state: ResearchState)->dict:
     messages=[
         SystemMessage(content="""You are an academic research editor.
-        Write a formal research paper with these exact sections:
-        
+        Write a concise research paper with these sections:
+
         # Title
-        ## Abstract
-        ## 1. Introduction
-        ## 2. Literature Review
-        ## 3. Key Findings
-        ## 4. Analysis & Discussion
-        ## 5. Conclusion
-        ## References
-        
-        Use formal academic language. Cite URLs from search results
-        as numbered references [1], [2] etc. Be thorough and detailed."""),
+        ## Abstract (100 words max)
+        ## 1. Introduction (100 words max)
+        ## 2. Key Findings (bullet points only)
+        ## 3. Conclusion (100 words max)
+        ## References (URLs only)
+
+        Be concise. No fluff. Stick to word limits strictly."""),
         HumanMessage(content=f"""Query: {state['query']}
         Draft: {state['draft']}
         Crituqe: {state['critique']} 
