@@ -3,6 +3,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from state import ResearchState
 from tools import search_duckduckgo
 from llm import llm
+import time
 
 '''
 planner_node: take user's raw query and break it into 3-5 focused sub questions
@@ -10,7 +11,7 @@ planner_node: take user's raw query and break it into 3-5 focused sub questions
 def planner_node(state: ResearchState) -> dict:
     query=state['query']
     messages=[
-        SystemMessage(content="You are a research planner. Break the user query into exactly 3 sub-questions. Return them as a numbered list. Nothing else."),
+        SystemMessage(content="You are a research planner. Break the user query into exactly 2 sub-questions. Return them as a numbered list. Nothing else."),
         HumanMessage(content=f"Query: {query}")
     ]
     response=llm.invoke(messages)
@@ -34,6 +35,7 @@ synthesizer_node: reads all the raw results the Researcher collected and mergers
 '''
 def synthesizer_node(state: ResearchState)->dict:
     search_results="\n\n".join(state["search_results"])
+    time.sleep(15)       # wait before hitting LLM again
     messages=[
         SystemMessage(content="You are a research writer. Synthesize the search results into a coherent, well structured draft report. Include key findings and cite the URLs as sources."),
         HumanMessage(content=f"Original query: {state['query']}\n\nSearch results:\n{search_results}")
