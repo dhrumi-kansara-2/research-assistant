@@ -74,13 +74,12 @@ def report_node(state: ResearchState)->dict:
         Write a concise research paper with these sections:
 
         # Title
-        ## Abstract (100 words max)
-        ## 1. Introduction (100 words max)
-        ## 2. Key Findings (bullet points only)
-        ## 3. Conclusion (100 words max)
-        ## References (URLs only)
+        ## Abstract (50 words max)
+        ## Key Findings (5 bullet points max)
+        ## Conclusion (50 words max)
+        ## References (URLs only, max 5)
 
-        Be concise. No fluff. Stick to word limits strictly."""),
+        Be very concise. Never leave a sentence unfinished."""), 
         HumanMessage(content=f"""Query: {state['query']}
         Draft: {state['draft']}
         Crituqe: {state['critique']} 
