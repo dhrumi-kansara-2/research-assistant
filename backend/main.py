@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.responses import StreamingResponse
@@ -42,3 +42,10 @@ async def research(request: ResearchRequest):
         media_type="text/event-stream"
     )
 
+
+@app.get("/research")
+async def research_get(query: str):
+    return StreamingResponse(
+        research_stream(query),
+        media_type="text/event-stream"
+    )
