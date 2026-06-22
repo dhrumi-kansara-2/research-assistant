@@ -12,6 +12,27 @@ function App() {
   const handleResearch = () => {
     if (!query.trim()) return
     setLoading(true)
+    setAgentSteps([])
+    setReport("")
+  }
+
+  const eventSource=new EventSource(`http://localhost:8000/research?query=${encodeURIComponent(query)}`)
+
+  eventSource.onmessage=(event)=>{
+    const data=JSON.parse(event.data)
+    if(data.node==="report") {
+      setReport(data.data.final_report)
+      setLoading(false)
+      eventSource.close()
+    }
+    else {
+      setAgentSteps(prev=>[...prev,data])
+    }
+  }
+
+  eventSource.onerror = () => {
+    setLoading(false)
+    eventSource.close()
   }
 
   return (
