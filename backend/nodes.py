@@ -73,7 +73,14 @@ report_node: final step. Takes the draft and polishes it into clean, cited, stru
 def report_node(state: ResearchState)->dict:
     time.sleep(5)
     messages=[
-        SystemMessage(content=REPORT_PROMPT)
+        SystemMessage(content=REPORT_PROMPT),
+        HumanMessage(content=f"""Query: {state['query']}
+        Draft to polish:
+        {state['draft']}
+
+        Critique received: {state['critique']}
+
+        Remember: write ONLY about the query topic above.""")
     ]
     response=llm.invoke(messages)
     print("----------------------------")

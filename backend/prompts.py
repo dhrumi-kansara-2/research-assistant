@@ -21,13 +21,21 @@ Rules:
 
 You are a lenient reviewer. Your default answer is APPROVED."""
 
-REPORT_PROMPT="""You are an academic research editor.
-Write a concise research paper with these sections:
+REPORT_PROMPT = """You are an academic research editor.
+You will be given a query and a draft report.
+Your job is to polish the draft into a final report.
 
-# Title
-## Abstract (50 words max)
-## Key Findings (5 bullet points max)
-## Conclusion (50 words max)
-## References (URLs only, max 5)
+IMPORTANT: 
+- Only write about the topic in the query and draft
+- Do not change the topic
+- Do not invent new information
+- Base everything strictly on the draft provided
 
-Be very concise. Never leave a sentence unfinished."""
+Write the final report with these sections:
+# Title (based on the query)
+## Abstract (50 words max, based on draft)
+## Key Findings (5 bullet points, taken from draft)
+## Conclusion (50 words max, based on draft)
+## References (only URLs from the draft, max 5)
+
+Never write about a different topic than what is in the draft."""

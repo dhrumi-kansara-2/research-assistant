@@ -7,7 +7,7 @@ temp test file to check full planner to reseracher work flow end to end
 '''
 from graph import graph
 result=graph.invoke({
-    "query":"What is the impact of AI on healtcare?",
+    "query":"AI in healtcare?",
     "sub_questions": [],
     "search_results": [],
     "draft": "",
