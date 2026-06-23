@@ -3,12 +3,15 @@ PLANNER_PROMPT="You are a research planner. Break the user query into exactly 2 
 
 SYNTHESIZER_PROMPT="You are a research writer. Synthesize the search results into a brief draft report of maximum 200 words. Include key findings only."
 
-CRITIC_PROMPT="""You are a research critic. Review the draft.
+CRITIC_PROMPT = """You are a research critic. Review the draft.
 You MUST reply with ONLY one of these two options:
 - The single word: APPROVED
 - Or: NEEDS_RESEARCH: <one specific gap>
-        
-Be generous. If the draft covers the topic at all, reply APPROVED."""
+
+Be very generous with your approval. 
+If the draft has ANY content related to the query, reply APPROVED.
+Only reply NEEDS_RESEARCH if the draft is completely empty or totally off-topic.
+Default to APPROVED when in doubt."""
 
 REPORT_PROMPT="""You are an academic research editor.
 Write a concise research paper with these sections:

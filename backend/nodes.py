@@ -50,6 +50,7 @@ def synthesizer_node(state: ResearchState)->dict:
 '''
 critic_node: reads the draft and decides if it's good enough or if the researcher needs to run again to fill gaps
 '''
+# MAX_RESEARCH_LOOPS = 2
 def critic_node(state: ResearchState) -> dict:
     time.sleep(5)
     messages = [

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, request
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.responses import StreamingResponse
@@ -10,8 +10,8 @@ app=FastAPI(title="Research Assistant API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://localhost:5173"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -44,7 +44,10 @@ async def research(request: ResearchRequest):
 
 
 @app.get("/research")
-async def research_get(query: str):
+async def research_get(query: str=""):
+    if not query.strip():
+        return {"error": "Query can not be empty"}
+    print(query)
     return StreamingResponse(
         research_stream(query),
         media_type="text/event-stream"
