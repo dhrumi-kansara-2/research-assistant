@@ -7,4 +7,4 @@ class ResearchState(TypedDict):
     search_results: Annotated[list[str], operator.add] #appends across researcher runs
     draft: str
     critique: str
-    final_report: str
+    final_report: str 

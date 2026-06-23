@@ -1,52 +1,114 @@
 # Research Assistant
 
-A mutli-agent research assitant built with LangGraph, Groq(Llama 3), DuckDuckGo Search, FastAPI, and React
+A multi-agent research assistant built with LangGraph, Groq (Llama 3), DuckDuckGo, FastAPI, and React.
 
 ## How it works
 
-1. **Planner**: breaks the query into 3-5 focused sub-questions
-2. **Resarcher**: searches DuckDuckGo for sub-question
-3. **Sythesizer**: merges all findings into a coherent draft
-4. **Critic**: evalute the draft and loops back if gaps are found
-5. **Report**: returns a final card, structured report
+A user query passes through 5 autonomous agents:
 
+1. **Planner** — breaks the query into 2 focused sub-questions
+2. **Researcher** — searches DuckDuckGo for each sub-question
+3. **Synthesizer** — merges findings into a draft report
+4. **Critic** — reviews the draft, loops back if gaps found
+5. **Report** — produces a final structured research paper
+ 
 
-## Tech stack
+## Tech Stack
 
 | Layer | Tool |
 |---|---|
 | Agent orchestration | LangGraph |
-| LLM | Groq API (Llama 3 8b) |
-| Search | DuckDuckGo (no API key) |
+| LLM | Groq API (llama-3.3-70b-versatile) |
+| Search | DuckDuckGo (no API key needed) |
 | Backend | FastAPI + SSE streaming |
-| Frontend | React + Tailwind |
+| Frontend | React + Vite + Tailwind CSS |
 | Tracing | LangSmith (free tier) |
 
-## Project structure
+## Project Structure
 
-``` 
+```
 research-assistant/
-
 ├── backend/
-│   ├── graph.py       # StateGraph, node wiring, edge logic
-│   ├── nodes.py       # all 5 agent node functions
-│   ├── tools.py       # DuckDuckGo search wrapper
-│   ├── main.py        # FastAPI /research streaming endpoint
-│   └── prompts.py     # system prompts for each agent
+│   ├── state.py        # ResearchState TypedDict
+│   ├── llm.py          # ChatGroq instance
+│   ├── tools.py        # DuckDuckGo search wrapper
+│   ├── nodes.py        # all 5 agent node functions
+│   ├── graph.py        # StateGraph wiring and edges
+│   ├── prompts.py      # system prompts for each agent
+│   └── main.py         # FastAPI /research streaming endpoint
 ├── frontend/
 │   └── src/
-│       ├── App.jsx
-│       └── components/
+│       └── App.jsx     # React UI with EventSource streaming
 ├── .env.example
 └── requirements.txt
 ```
 
-## Running the backend
+## Setup
+
+### Backend
+
+1. Clone the repo:
 ```bash
-cd backend
-pip install -r requirements.txt
-python graph.py
-\
+git clone https://github.com/YOUR_USERNAME/research-assistant.git
+cd research-assistant
 ```
 
- 
+2. Install Python dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Copy `.env.example` to `.env` and fill in your keys:
+```bash
+cp .env.example .env
+```
+
+4. Get your API keys:
+   - Groq → https://console.groq.com
+   - LangSmith → https://smith.langchain.com
+
+5. Start the backend:
+```bash
+cd backend
+uvicorn main:app --reload --port 8000
+```
+
+### Frontend
+
+1. Install dependencies:
+```bash
+cd frontend
+npm install
+```
+
+2. Start the dev server:
+```bash
+npm run dev
+```
+
+3. Open http://localhost:5173 in your browser
+
+## Environment Variables
+
+```bash
+GROQ_API_KEY=your_groq_api_key
+LANGCHAIN_API_KEY=your_langsmith_api_key
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_PROJECT=research-assistant
+```
+
+## Token Limits
+
+Running on Groq free tier:
+- Daily limit: 100,000 tokens
+- Per minute: 12,000 tokens
+- Each research run uses ~4,000-6,000 tokens
+
+If you hit limits, wait 1 hour for the daily limit to reset.
+
+## API
+
+| Method | Route | Description |
+|---|---|---|
+| GET | `/research?query=...` | Streams agent progress as SSE |
+| GET | `/docs` | Auto-generated API documentation |

@@ -27,7 +27,7 @@ async def research_stream(query: str):
         "search_results":[],
         "draft":[],
         "critique":[],
-        "final_report":[]
+        "final_report":[], 
     }
     for chunk in graph.stream(initial_state, config={"recursion_limit":10}):
         node_name=list(chunk.keys())[0]
@@ -47,7 +47,6 @@ async def research(request: ResearchRequest):
 async def research_get(query: str=""):
     if not query.strip():
         return {"error": "Query can not be empty"}
-    print(query)
     return StreamingResponse(
         research_stream(query),
         media_type="text/event-stream"

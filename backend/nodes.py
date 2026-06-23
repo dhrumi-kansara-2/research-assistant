@@ -45,6 +45,10 @@ def synthesizer_node(state: ResearchState)->dict:
         HumanMessage(content=f"Original query: {state['query']}\n\nSearch results:\n{search_results}")
     ]
     response=llm.invoke(messages)
+    # print("------------------------------")
+    # print("synthesizer node: ")
+    # print(response.content)
+    # print("------------------------------")
     return {"draft": response.content}
 
 '''
@@ -53,6 +57,9 @@ critic_node: reads the draft and decides if it's good enough or if the researche
 # MAX_RESEARCH_LOOPS = 2
 def critic_node(state: ResearchState) -> dict:
     time.sleep(5)
+    # print('------------------------------')
+    # print('critic node',state['draft'])
+    # print('------------------------------')
     messages = [
         SystemMessage(content=CRITIC_PROMPT),
         HumanMessage(content=f"Draft:\n{state['draft'][:500]}")
@@ -69,4 +76,8 @@ def report_node(state: ResearchState)->dict:
         SystemMessage(content=REPORT_PROMPT)
     ]
     response=llm.invoke(messages)
+    print("----------------------------")
+    print("final_report",response.content)
+    print("----------------------------")
+
     return {"final_report":response.content}
