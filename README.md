@@ -97,15 +97,6 @@ LANGCHAIN_TRACING_V2=true
 LANGCHAIN_PROJECT=research-assistant
 ```
 
-## Token Limits
-
-Running on Groq free tier:
-- Daily limit: 100,000 tokens
-- Per minute: 12,000 tokens
-- Each research run uses ~4,000-6,000 tokens
-
-If you hit limits, wait 1 hour for the daily limit to reset.
-
 ## API
 
 | Method | Route | Description |
