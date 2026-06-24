@@ -40,10 +40,7 @@ def synthesizer_node(state: ResearchState)->dict:
     time.sleep(15)     
     latest_results = state["search_results"][-4:] 
     search_results= "\n\n".join(latest_results)
-    search_results=search_results[:1500] 
-    print("=== SYNTHESIZER DEBUG ===")
-    print("Search results length:", len(search_results)) 
-    print("========================")
+    search_results=search_results[:1500]  
     if not search_results.strip():
         return {"draft": "No search results available for this query."}
   
